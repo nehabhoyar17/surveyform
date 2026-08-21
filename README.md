@@ -106,7 +106,3 @@ If you make changes to the models, create and apply a new migration:
 dotnet ef migrations add <MigrationName>
 dotnet ef database update
 ```
-
-## License
-
-*(Add your license here, e.g. MIT)*
