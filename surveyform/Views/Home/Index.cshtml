@@ -1,0 +1,163 @@
+﻿@model SurveyApp.Models.SurveyResponse
+@{
+    ViewData["Title"] = "Survey";
+}
+
+<section class="hero-section" style="padding: 60px 0 90px;">
+    <div class="container">
+        <h1 style="font-size:2rem;">Tell Us About Your Experience</h1>
+        <p>All fields marked * are required.</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="survey-card p-4 p-md-5 mx-auto" style="max-width: 800px;">
+
+        <div class="progress mb-4">
+            <div class="progress-bar" id="surveyProgress" role="progressbar" style="width: 10%"></div>
+        </div>
+
+        <form asp-controller="Survey" asp-action="Index" method="post" id="surveyForm">
+            @Html.AntiForgeryToken()
+
+            <h5 class="survey-section-title"><i class="bi bi-person-fill me-1"></i> Personal Information</h5>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Full Name *</label>
+                    <input asp-for="FullName" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email Address *</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone Number *</label>
+                    <input asp-for="PhoneNumber" class="form-control" required />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Age *</label>
+                    <input asp-for="Age" type="number" min="1" max="120" class="form-control" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Gender *</label>
+                    <select asp-for="Gender" class="form-select" required>
+                        <option value="">Select...</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                        <option>Prefer not to say</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">City *</label>
+                    <input asp-for="City" class="form-control" required />
+                </div>
+            </div>
+
+            <h5 class="survey-section-title"><i class="bi bi-list-check me-1"></i> Survey Questions</h5>
+
+            <div class="mb-3">
+                <label class="form-label">1. How satisfied are you with our service? *</label>
+                @foreach (var opt in new[] { "Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied" })
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Satisfaction" value="@opt" required />
+                        <label class="form-check-label">@opt</label>
+                    </div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">2. How easy was it to use our service? *</label>
+                @foreach (var opt in new[] { "Very Easy", "Easy", "Neutral", "Difficult", "Very Difficult" })
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="EaseOfUse" value="@opt" required />
+                        <label class="form-check-label">@opt</label>
+                    </div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">3. How would you rate the overall quality? *</label>
+                <select name="QualityRating" class="form-select" required>
+                    <option value="">Select...</option>
+                    <option>Excellent</option>
+                    <option>Good</option>
+                    <option>Average</option>
+                    <option>Poor</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">4. How likely are you to recommend our service to others? *</label>
+                <select name="Recommendation" class="form-select" required>
+                    <option value="">Select...</option>
+                    <option>Very Likely</option>
+                    <option>Likely</option>
+                    <option>Not Sure</option>
+                    <option>Unlikely</option>
+                    <option>Very Unlikely</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">5. What did you like most about our service?</label>
+                <textarea asp-for="Likes" class="form-control" rows="2"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">6. What can we improve?</label>
+                <textarea asp-for="Improvements" class="form-control" rows="2"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">7. Would you use our service again? *</label>
+                @foreach (var opt in new[] { "Yes", "Maybe", "No" })
+                {
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="UseAgain" value="@opt" required />
+                        <label class="form-check-label">@opt</label>
+                    </div>
+                }
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">8. Any additional comments or suggestions?</label>
+                <textarea asp-for="AdditionalComments" class="form-control" rows="2"></textarea>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+                <button type="submit" class="btn btn-primary px-5">
+                    Submit Survey <i class="bi bi-send-fill ms-1"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const form = document.getElementById('surveyForm');
+        const bar = document.getElementById('surveyProgress');
+        function updateProgress() {
+            const required = form.querySelectorAll('[required]');
+            let filled = 0;
+            const seen = new Set();
+            required.forEach(el => {
+                if (el.type === 'radio') {
+                    if (seen.has(el.name)) return;
+                    seen.add(el.name);
+                    if (form.querySelector(`input[name="${el.name}"]:checked`)) filled++;
+                } else if (el.value && el.value.trim() !== '') {
+                    filled++;
+                }
+            });
+            const pct = Math.min(100, Math.round((filled / Math.max(required.length, 1)) * 100));
+            bar.style.width = pct + '%';
+        }
+        form.addEventListener('input', updateProgress);
+        form.addEventListener('change', updateProgress);
+    </script>
+}

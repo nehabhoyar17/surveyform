@@ -1,0 +1,28 @@
+﻿@model SurveyApp.Models.SurveyResponse
+@{
+    ViewData["Title"] = "Response Details";
+}
+
+<div class="container my-5">
+    <div class="survey-card p-4 mx-auto" style="max-width: 700px;">
+        <h4 class="fw-bold mb-3">@Model.FullName's Response</h4>
+        <table class="table">
+            <tr><th>Email</th><td>@Model.Email</td></tr>
+            <tr><th>Phone</th><td>@Model.PhoneNumber</td></tr>
+            <tr><th>Age</th><td>@Model.Age</td></tr>
+            <tr><th>Gender</th><td>@Model.Gender</td></tr>
+            <tr><th>City</th><td>@Model.City</td></tr>
+            <tr><th>Satisfaction</th><td>@Model.Satisfaction</td></tr>
+            <tr><th>Ease Of Use</th><td>@Model.EaseOfUse</td></tr>
+            <tr><th>Quality Rating</th><td>@Model.QualityRating</td></tr>
+            <tr><th>Recommendation</th><td>@Model.Recommendation</td></tr>
+            <tr><th>Likes</th><td>@Model.Likes</td></tr>
+            <tr><th>Improvements</th><td>@Model.Improvements</td></tr>
+            <tr><th>Use Again</th><td>@Model.UseAgain</td></tr>
+            <tr><th>Additional Comments</th><td>@Model.AdditionalComments</td></tr>
+            <tr><th>Submitted At</th><td>@Model.SubmittedAt</td></tr>
+        </table>
+        <a asp-action="Index" class="btn btn-outline-secondary">← Back to list</a>
+        <a asp-controller="Survey" asp-action="DownloadPdf" asp-route-id="@Model.Id" class="btn btn-primary">Download PDF</a>
+    </div>
+</div>
